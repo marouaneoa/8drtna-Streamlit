@@ -4,6 +4,8 @@ from streamlit_extras.switch_page_button import switch_page
 from transformers import pipeline
 import soundfile as sf
 import io
+from pydub import AudioSegment
+import librosa
 
 settings.init()
 
@@ -17,17 +19,35 @@ st.set_page_config(
 # Load Whisper model and processor
 @st.cache_resource
 def load_whisper_model():
-    transcriber = pipeline(model="openai/whisper-small")
+    transcriber = pipeline(task = "automatic-speech-recognition", model="openai/whisper-small", generate_kwargs={"task": "transcribe"})
     return transcriber
 
 transcriber = load_whisper_model()
 
 def transcribe_audio(audio_bytes):
-    # Load audio data
-    audio_input, sample_rate = sf.read(io.BytesIO(audio_bytes))
-    # Transcribe audio
-    transcription = transcriber(audio_input, sampling_rate=sample_rate)["text"]
-    return transcription
+    try:
+        # Convert audio bytes to AudioSegment
+        audio = AudioSegment.from_file(io.BytesIO(audio_bytes))
+        
+        # Export audio to WAV format in-memory
+        audio_wav_io = io.BytesIO()
+        audio.export(audio_wav_io, format="wav")
+        audio_wav_io.seek(0)
+        
+        # Load audio data as mono and resample to 16kHz
+        y, sr = librosa.load(audio_wav_io, sr=None)
+        y_resampled = librosa.resample(y, orig_sr=sr, target_sr=16000)
+        
+        # Transcribe audio
+        result = transcriber(y_resampled, return_timestamps=True, generate_kwargs={"task": "transcribe", "language": "en"})
+        transcription = result["text"]
+        return transcription
+    except FileNotFoundError:
+        st.error("Error: File not found.")
+    except ValueError as e:
+        st.error(f"Error processing audio: {e}")
+    except Exception as e:
+        st.error(f"Unexpected error: {e}")
 
 def main_page():
     """Displays the main page content"""
