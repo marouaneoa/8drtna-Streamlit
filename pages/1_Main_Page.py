@@ -18,13 +18,12 @@ st.set_page_config(
 
 # Load Whisper model and processor
 @st.cache_resource
-def load_whisper_model():
-    transcriber = pipeline(task="automatic-speech-recognition", model="openai/whisper-small", generate_kwargs={"task": "transcribe"})
+def load_whisper_model(language):
+    model_name = "marouaneoa/whisper-small-dar" if language == "Darija" else "marouaneoa/whisper-small-kabyle"
+    transcriber = pipeline("automatic-speech-recognition", model=model_name, generate_kwargs={"task": "transcribe"})
     return transcriber
 
-transcriber = load_whisper_model()
-
-def transcribe_audio(audio_bytes):
+def transcribe_audio(transcriber, audio_bytes):
     try:
         # Convert audio bytes to AudioSegment
         audio = AudioSegment.from_file(io.BytesIO(audio_bytes))
@@ -87,6 +86,10 @@ def main_page():
         st.session_state.user = None
 
     if st.session_state.user:
+        language = st.selectbox("Select Language", ["Darija", "Kabyle"])
+
+        transcriber = load_whisper_model(language)
+
         uploaded_file = st.file_uploader("Upload an audio file", type=["wav"])
 
         if uploaded_file is not None:
@@ -95,7 +98,7 @@ def main_page():
                 st.audio(audio_bytes, format='audio/wav')
 
                 st.write("Transcript:")
-                transcript = transcribe_audio(audio_bytes)
+                transcript = transcribe_audio(transcriber, audio_bytes)
                 if transcript:
                     st.write(transcript)
                     # Upload the file and transcription to Supabase
