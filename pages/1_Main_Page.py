@@ -23,10 +23,13 @@ def load_whisper_model(language):
     transcriber = pipeline("automatic-speech-recognition", model=model_name, generate_kwargs={"task": "transcribe"})
     return transcriber
 
-def transcribe_audio(transcriber, audio_bytes):
+def transcribe_audio(transcriber, audio_bytes, file_extension):
     try:
         # Convert audio bytes to AudioSegment
-        audio = AudioSegment.from_file(io.BytesIO(audio_bytes))
+        if file_extension == "mp3":
+            audio = AudioSegment.from_file(io.BytesIO(audio_bytes), format="mp3")
+        else:
+            audio = AudioSegment.from_file(io.BytesIO(audio_bytes), format="wav")
         
         # Export audio to WAV format in-memory
         audio_wav_io = io.BytesIO()
@@ -90,15 +93,16 @@ def main_page():
 
         transcriber = load_whisper_model(language)
 
-        uploaded_file = st.file_uploader("Upload an audio file", type=["wav"])
+        uploaded_file = st.file_uploader("Upload an audio file", type=["wav", "mp3"])
 
         if uploaded_file is not None:
             try:
+                file_extension = uploaded_file.name.split(".")[-1]
                 audio_bytes = uploaded_file.read()
-                st.audio(audio_bytes, format='audio/wav')
+                st.audio(audio_bytes, format=f'audio/{file_extension}')
 
                 st.write("Transcript:")
-                transcript = transcribe_audio(transcriber, audio_bytes)
+                transcript = transcribe_audio(transcriber, audio_bytes, file_extension)
                 if transcript:
                     st.write(transcript)
                     # Upload the file and transcription to Supabase
