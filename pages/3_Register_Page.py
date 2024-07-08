@@ -28,7 +28,7 @@ def main():
     if st.session_state.user:
         st.success("You are already logged in!")
         if st.button("Go to Main Page"):
-            switch_page("Main")  # Replace with the actual main page name
+            switch_page("Main")  
         return
 
     st.title("Sign Up Page")
@@ -38,7 +38,7 @@ def main():
     if st.button("Sign Up"):
         if register_user(email, password):
             if st.button("Go to Login"):
-                switch_page("Login")  # Replace with the actual login page name
+                switch_page("Login")  
 
 if __name__ == "__main__":
     main()
