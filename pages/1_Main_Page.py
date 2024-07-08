@@ -106,7 +106,7 @@ def main_page():
                 if transcript:
                     st.write(transcript)
                     # Upload the file and transcription to Supabase
-                    user_id = st.session_state.user["id"]  # Access the user ID correctly
+                    user_id = st.session_state.user["id"]  
                     filename = f"{user_id}_{uploaded_file.name}"
                     upload_to_supabase(user_id, audio_bytes, filename, transcript)
                 else:
@@ -119,9 +119,9 @@ def main_page():
         register_button = st.button("Register", use_container_width=True)
         
         if register_button:
-            switch_page("register page")  # Replace with the actual page name
+            switch_page("register page")  
         elif login_button:
-            switch_page("login page")  # Replace with the actual page name
+            switch_page("login page")  
 
-# Call the main_page function to display the content
+
 main_page()
