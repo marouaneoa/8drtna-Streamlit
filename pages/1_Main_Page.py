@@ -19,7 +19,7 @@ st.set_page_config(
 # Load Whisper model and processor
 @st.cache_resource
 def load_whisper_model(language):
-    model_name = "marouaneoa/whisper-small-dar" if language == "Darija" else "marouaneoa/whisper-small-kabyle"
+    model_name = "marouaneoa/whisper-small-darija" if language == "Darija" else "marouaneoa/whisper-small-kabyle"
     transcriber = pipeline("automatic-speech-recognition", model=model_name, generate_kwargs={"task": "transcribe"})
     return transcriber
 
