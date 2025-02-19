@@ -17,8 +17,8 @@ The 8drtna model was created by fine-tuning OpenAI's Whisper model to support tr
 1. **Clone the Repository**:
 
      ```bash
-    git clone https://github.com/marouaneoa/8drtna-Streamlit.git
-    cd 8drtna-Streamlit
+    git clone https://github.com/marouaneoa/8drtna.git
+    cd 8drtna
     ```  
 
 2. **Install Dependencies**:
@@ -54,7 +54,7 @@ This will launch the app in your default web browser.
 
 
 ```
-8drtna-Streamlit/
+8drtna/
 ├── app.py          # Main application script
 ├── settings.py     # Configuration settings
 ├── pages/          # Directory containing sub-pages
