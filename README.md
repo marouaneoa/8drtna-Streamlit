@@ -1,4 +1,4 @@
-# 8drtna Streamlit
+# 8drtna
 
 A web application developed using Streamlit and Supabase to host the 8drtna model for audio transcription in both Algerian Darija and Kabyle dialects.
 
