@@ -1,0 +1,8 @@
+librosa==0.10.2.post1
+pydub==0.25.1
+python-dotenv==1.0.1
+soundfile==0.12.1
+streamlit==1.41.1
+streamlit_extras==0.5.5
+supabase==2.13.0
+transformers==4.49.0
